@@ -1,0 +1,1696 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>淡路島AI技術リサーチ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --panel: #ffffff;
+      --paper: #f6f8fa;
+      --accent: #3ea8ff;
+      --accent-dark: #0f83d8;
+      --teal: #10b6b8;
+      --amber: #f59e0b;
+      --blue: #2563eb;
+      --red: #e5484d;
+      --shadow: 0 8px 24px rgba(31, 41, 55, .06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, Arial, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 16px 28px 14px;
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 980px;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f3f7fb;
+      flex: 0 0 auto;
+    }
+
+    .lang-switch button {
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: #4b5563;
+      padding: 7px 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .lang-switch button.active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(62, 168, 255, .25);
+    }
+
+    .top-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+      color: #0f83d8;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(250px, 300px) minmax(0, 1fr) minmax(300px, 370px);
+      gap: 18px;
+      padding: 18px;
+      min-height: calc(100vh - 83px);
+    }
+
+    aside,
+    .stage-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    aside {
+      padding: 16px;
+      overflow: auto;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: #374151;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    .model-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .model-button,
+    .patent-button {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease, transform .15s ease;
+    }
+
+    .model-button:hover,
+    .patent-button:hover {
+      border-color: #9dd5ff;
+      box-shadow: 0 8px 18px rgba(31, 41, 55, .08);
+      transform: translateY(-1px);
+    }
+
+    .model-button.active,
+    .patent-button.active {
+      border-color: #8bd0ff;
+      background: #f0f9ff;
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .model-name,
+    .patent-no {
+      display: block;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .model-meta,
+    .patent-area {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .stage-panel {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .stage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #fbfdff);
+    }
+
+    .stage-title {
+      min-width: 0;
+    }
+
+    .stage-title h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 800;
+    }
+
+    .stage-title p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      font-size: 12px;
+      color: #4b5563;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      background: #f8fafc;
+      border: 1px solid #edf2f7;
+      border-radius: 999px;
+      padding: 5px 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      background: var(--accent);
+    }
+
+    .dot.engine { background: var(--red); }
+    .dot.chassis { background: var(--blue); }
+    .dot.control { background: var(--teal); }
+    .dot.design { background: var(--amber); }
+
+    .stage {
+      position: relative;
+      flex: 1;
+      min-height: 540px;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(62, 168, 255, .08), transparent 30%),
+        linear-gradient(90deg, rgba(31,41,55,.04) 1px, transparent 1px),
+        linear-gradient(rgba(31,41,55,.04) 1px, transparent 1px),
+        #fbfdff;
+      background-size: auto, 30px 30px, 30px 30px, auto;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+    }
+
+    .bike-wrap {
+      position: relative;
+      width: min(92%, 980px);
+      aspect-ratio: 16 / 10;
+      display: grid;
+      place-items: center;
+    }
+
+    .bike-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+      filter: drop-shadow(0 18px 24px rgba(31, 41, 55, .16));
+    }
+
+    .pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      border: 2px solid #fff;
+      color: #fff;
+      background: var(--red);
+      border-radius: 999px;
+      min-width: 88px;
+      height: 32px;
+      padding: 0 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+      box-shadow: 0 8px 18px rgba(31, 41, 55, .2);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform .15s ease, box-shadow .15s ease, outline-color .15s ease;
+    }
+
+    .pin.engine { background: var(--red); }
+    .pin.chassis { background: var(--blue); }
+    .pin.control { background: var(--teal); }
+    .pin.design { background: var(--amber); }
+    .pin.active {
+      outline: 4px solid rgba(62, 168, 255, .28);
+      transform: translate(-50%, -50%) scale(1.08);
+      z-index: 4;
+    }
+
+    .detail {
+      padding: 18px;
+      overflow: auto;
+    }
+
+    .detail h2 {
+      margin: 0 0 5px;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 800;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: #e8f6ff;
+      color: #0369a1;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .detail dl {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 8px 10px;
+      margin: 16px 0;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .detail dt {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .detail dd {
+      margin: 0;
+    }
+
+    .note {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      color: #4b5563;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .source-list {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      line-height: 1.7;
+      color: #4b5563;
+    }
+
+    a {
+      color: #0f83d8;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 980px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .header-row {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .lang-switch {
+        align-self: flex-start;
+      }
+
+      aside {
+        max-height: none;
+      }
+
+      .stage {
+        min-height: 430px;
+        padding: 16px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      header {
+        padding: 14px 16px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      main {
+        padding: 10px;
+        gap: 10px;
+      }
+
+      .stage-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .legend {
+        justify-content: flex-start;
+      }
+
+      .stage {
+        min-height: 350px;
+      }
+
+      .pin {
+        min-width: 70px;
+        height: 30px;
+        font-size: 10px;
+      }
+
+      .detail dl {
+        grid-template-columns: 74px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-row">
+      <div>
+        <div class="brand">
+          <img class="brand-logo" src="assets/brand/awaji_tech_logo_01.png" alt="">
+          <h1 data-i18n="pageTitle">淡路島AI技術リサーチ</h1>
+        </div>
+        <p class="subtitle" data-i18n="pageSubtitle">代表的な80年代 Yamaha オートバイ画像を中心に、収集済み特許を関連部位へ配置した確認用ページです。採用実績の断定ではなく、特許タイトル・要約・対象部位からの関連表示です。</p>
+      </div>
+      <div class="lang-switch" aria-label="Language">
+        <button type="button" id="langJa" class="active">日本語</button>
+        <button type="button" id="langEn">English</button>
+      </div>
+      <a class="top-link" href="index.html" data-i18n="backHome">トップへ</a>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+      <h2 class="section-title" data-i18n="modelSection">代表車両</h2>
+      <div class="model-list" id="modelList"></div>
+      <div class="source-list">
+        <strong data-i18n="imageSourcesTitle">画像ソース</strong><br>
+        <span data-i18n="imageSourcesBody">Wikimedia Commons の再利用可能画像を使用。ページ下部の詳細欄で各画像の出典を確認できます。</span>
+      </div>
+    </aside>
+
+    <section class="stage-panel" aria-label="Patent map">
+      <div class="stage-head">
+        <div class="stage-title">
+          <h2 id="modelTitle"></h2>
+          <p id="modelSummary"></p>
+        </div>
+        <div class="legend" aria-label="Legend">
+          <span><i class="dot engine"></i>エンジン/吸排気</span>
+          <span><i class="dot chassis"></i>車体/足回り</span>
+          <span><i class="dot control"></i>制御/診断</span>
+          <span><i class="dot design"></i>意匠</span>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="bike-wrap" id="bikeWrap">
+          <img class="bike-image" id="bikeImage" alt="">
+        </div>
+      </div>
+    </section>
+
+    <aside class="detail">
+      <span class="badge" id="statusBadge" data-i18n="statusBadge">関連部位の推定</span>
+      <h2 id="patentTitle"></h2>
+      <dl>
+        <dt data-i18n="patentNumberLabel">特許番号</dt>
+        <dd id="patentNumber"></dd>
+        <dt data-i18n="patentAreaLabel">関連部位</dt>
+        <dd id="patentArea"></dd>
+        <dt data-i18n="priorityLabel">優先日</dt>
+        <dd id="patentPriority"></dd>
+        <dt data-i18n="publicationLabel">公開日</dt>
+        <dd id="patentPublication"></dd>
+        <dt data-i18n="assigneeLabel">権利者</dt>
+        <dd id="patentAssignee"></dd>
+        <dt data-i18n="useLabel">使われ方</dt>
+        <dd id="patentUse"></dd>
+      </dl>
+      <p><a id="patentLink" href="#" target="_blank" rel="noreferrer" data-i18n="openGoogle">Google Patentsで開く</a></p>
+      <div class="note" id="modelSource"></div>
+      <h2 class="section-title" data-i18n="shownPatents">この車両に表示中の特許</h2>
+      <div class="model-list" id="patentList"></div>
+    </aside>
+  </main>
+
+  <script>
+    const models = [
+      {
+        id: "rd350",
+        name: "Yamaha RD350LC / RD350 YPVS",
+        years: "1980-1983 系",
+        summary: "2ストロークスポーツ。吸気、排気、冷却、シートなどの特許候補を配置。",
+        image: "assets/processed/rd350_factory_manga.png",
+        imageCredit: "画像: Wikimedia Commons の Yamaha RD350 写真をもとに生成した、Yamaha工場内風の漫画調確認用画像。",
+        patents: ["US4475617A", "US4592311A", "JPS5758511A", "JPS57102519A", "US4457524A", "USD267561S"]
+      },
+      {
+        id: "venture",
+        name: "Yamaha Venture Royale XVZ1200",
+        years: "1983-1993 系",
+        summary: "大型ツアラー。速度制御、エンジン、ブレーキ、診断、意匠を配置。",
+        image: "assets/processed/venture_royale_factory_manga.png",
+        imageCredit: "画像: Wikimedia Commons の 1983 Yamaha Venture Royale 写真をもとに生成した、Yamaha工場内風の漫画調確認用画像。",
+        patents: ["US4611561A", "US4364340A", "US4667760A", "US4447801A", "USD268998S", "USD277756S"]
+      },
+      {
+        id: "vmax",
+        name: "Yamaha V-Max / VMX1200",
+        years: "1985 以降",
+        summary: "V4エンジン系の大型スポーツクルーザー。吸排気、駆動、シート、意匠を配置。",
+        image: "assets/processed/vmax_factory_manga.png",
+        imageCredit: "画像: Wikimedia Commons の Yamaha V-Max 写真をもとに生成した、Yamaha工場内風の漫画調確認用画像。",
+        patents: ["US4809800A", "US4795420A", "US4662471A", "US4457524A", "USD288796S"]
+      },
+      {
+        id: "fzr1000",
+        name: "Yamaha FZR1000",
+        years: "1987-1995 系",
+        summary: "80年代後半の大型スポーツ。排気制御、ブレーキ、車体、意匠を配置。",
+        image: "assets/processed/fzr1000_factory_manga.png",
+        imageCredit: "画像: Wikimedia Commons の Yamaha FZR1000 写真をもとに生成した、Yamaha工場内風の漫画調確認用画像。",
+        patents: ["US4785626A", "US4860538A", "US4667760A", "JPH0790814B2", "USD288796S"]
+      }
+    ];
+
+    const patents = {
+      US4542910A: {
+        title: "Motorcycle suspension system",
+        summary: "車体フレーム、後輪支持部、ショックアブソーバーなどの配置を工夫し、オートバイのリアサスペンション性能と車体レイアウト性を両立させる技術。",
+        area: "リアサスペンション",
+        kind: "chassis",
+        x: 30,
+        y: 70,
+        priority: "1982-01-25",
+        publication: "1985-09-24",
+        assignee: "Yamaha Motor Co Ltd",
+        use: "リアホイール付近の懸架構造に関係する候補。車体後部の沈み込み、リンク、ショック周辺の技術として表示。",
+        link: "https://patents.google.com/patent/US4542910A/en"
+      },
+      US4611561A: {
+        title: "Automatic speed control system for motorcycles",
+        summary: "オートバイで設定速度を維持するため、車速検出、スロットル制御、操作スイッチなどを組み合わせた自動速度制御システム。",
+        area: "速度制御/ハンドル周辺",
+        kind: "control",
+        x: 66,
+        y: 38,
+        priority: "1983-08-31",
+        publication: "1986-09-16",
+        assignee: "Yamaha Motor Co Ltd",
+        use: "ツアラーの巡航速度制御に関係する候補。操作系、スロットル、車速検出まわりに配置。",
+        link: "https://patents.google.com/patent/US4611561A/en"
+      },
+      US4809800A: {
+        title: "Exhaust system for vehicle",
+        summary: "車両の排気通路や消音器の構成を工夫し、エンジン性能、排気音、車体搭載性を改善する排気システム。",
+        area: "排気系",
+        kind: "engine",
+        x: 66,
+        y: 72,
+        priority: "1984-12-10",
+        publication: "1989-03-07",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "マフラー、エキゾーストパイプ、排気通路に関係する候補。車体下部から後方の排気系に配置。",
+        link: "https://patents.google.com/patent/US4809800A/en"
+      },
+      US4785626A: {
+        title: "Exhaust gas control means for motorcycle and the like",
+        summary: "オートバイなどの排気通路に制御手段を設け、運転状態に応じて排気特性を調整することで出力特性や排気性能を改善する技術。",
+        area: "排気制御",
+        kind: "engine",
+        x: 58,
+        y: 66,
+        priority: "1986-10-27",
+        publication: "1988-11-22",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "排気流の制御機構に関係する候補。エンジン出口からマフラー前段に配置。",
+        link: "https://patents.google.com/patent/US4785626A/en"
+      },
+      US4860538A: {
+        title: "Exhaust gas control means for motorcycle and the like",
+        summary: "排気管内の制御弁や関連機構により、エンジン回転域に応じた排気流を調整し、オートバイの出力特性を改善する技術。",
+        area: "排気制御",
+        kind: "engine",
+        x: 61,
+        y: 66,
+        priority: "1988-02-23",
+        publication: "1989-08-29",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "80年代後半の排気制御系候補。FZR1000 EXUP期の排気制御テーマと近い領域として表示。",
+        link: "https://patents.google.com/patent/US4860538A/en"
+      },
+      US4795420A: {
+        title: "Exhaust gas control means for engine",
+        summary: "エンジンの排気系に設けた制御機構により、排気流量や排気圧を調整し、運転状態に応じた性能向上を図る技術。",
+        area: "エンジン/排気制御",
+        kind: "engine",
+        x: 52,
+        y: 61,
+        priority: "1986-03-07",
+        publication: "1989-01-03",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "エンジンの排気制御に関係する候補。シリンダー後方から排気管の入口付近に配置。",
+        link: "https://patents.google.com/patent/US4795420A/en"
+      },
+      US4475617A: {
+        title: "Engine intake system for motorcycles",
+        summary: "オートバイの限られた車体空間内で、エアクリーナーや吸気通路を効率よく配置し、エンジン吸気性能を高める技術。",
+        area: "吸気系",
+        kind: "engine",
+        x: 48,
+        y: 48,
+        priority: "1980-09-16",
+        publication: "1984-10-09",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "エアクリーナー、キャブレター、吸気通路に関係する候補。燃料タンク下からエンジン上部に配置。",
+        link: "https://patents.google.com/patent/US4475617A/en"
+      },
+      US4592311A: {
+        title: "Intake system for two-cycle multi-cylinder engines",
+        summary: "2サイクル多気筒エンジンの吸気通路やチャンバー構成を工夫し、各気筒の吸気特性を整えて出力を改善する技術。",
+        area: "2ストローク吸気",
+        kind: "engine",
+        x: 45,
+        y: 53,
+        priority: "1983-09-26",
+        publication: "1986-06-03",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "2ストローク多気筒エンジンの吸気系候補。RD/RZ系のエンジン吸気側として表示。",
+        link: "https://patents.google.com/patent/US4592311A/en"
+      },
+      US4364340A: {
+        title: "Vehicular engine",
+        summary: "車両用エンジンの構造や補機配置を工夫し、搭載性、整備性、性能を向上させるためのエンジン構成。",
+        area: "エンジン",
+        kind: "engine",
+        x: 49,
+        y: 58,
+        priority: "1980-02-08",
+        publication: "1982-12-21",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "車両用エンジン構造の候補。エンジン本体の配置として表示。",
+        link: "https://patents.google.com/patent/US4364340A/en"
+      },
+      US4457524A: {
+        title: "Motorcycle seat",
+        summary: "ライダーや同乗者の着座性、外観、車体への取付性を考慮したオートバイ用シート構造。",
+        area: "シート",
+        kind: "chassis",
+        x: 43,
+        y: 32,
+        priority: "1980-04-18",
+        publication: "1984-07-03",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "ライダーシート、タンデムシート形状に関係する候補。車体上部中央に配置。",
+        link: "https://patents.google.com/patent/US4457524A/en"
+      },
+      JPS5758511A: {
+        title: "Water cooling system for motorcycle engine",
+        summary: "オートバイ用エンジンの水冷経路、ラジエーター、関連配管を車体内に配置し、冷却性能と搭載性を確保する技術。",
+        area: "水冷系",
+        kind: "engine",
+        x: 54,
+        y: 52,
+        priority: "1980-09-22",
+        publication: "1982-04-08",
+        assignee: "Yamaha Motor Co Ltd",
+        use: "ラジエーター、冷却水経路、エンジン冷却に関係する候補。エンジン前方から中央部に配置。",
+        link: "https://patents.google.com/patent/JPS5758511A/en"
+      },
+      JPS57102519A: {
+        title: "Two-stage-supercharged engine for motorcycle",
+        summary: "オートバイ用エンジンに二段過給構成を適用し、吸気圧を高めて出力特性を向上させる技術。",
+        area: "過給エンジン",
+        kind: "engine",
+        x: 51,
+        y: 49,
+        priority: "1980-12-18",
+        publication: "1982-06-25",
+        assignee: "Yamaha Motor Co Ltd",
+        use: "過給器を含むエンジン構成候補。エンジン上部から吸気側に配置。",
+        link: "https://patents.google.com/patent/JPS57102519A/en"
+      },
+      US4489803A: {
+        title: "Rear suspension system for motorcycles",
+        summary: "後輪、スイングアーム、ショックアブソーバーなどの連結関係を工夫し、リアサスペンションの動作特性を改善する技術。",
+        area: "リアサスペンション",
+        kind: "chassis",
+        x: 29,
+        y: 68,
+        priority: "1981-10-14",
+        publication: "1984-12-18",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "リアショック、スイングアーム、リンクまわりの候補。後輪上部に配置。",
+        link: "https://patents.google.com/patent/US4489803A/en"
+      },
+      US4667760A: {
+        title: "Disk brake arrangement for vehicle",
+        summary: "車輪周辺のディスクブレーキ部品の配置を工夫し、制動性能、冷却性、車体への搭載性を改善する技術。",
+        area: "ブレーキ",
+        kind: "chassis",
+        x: 79,
+        y: 74,
+        priority: "1984-05-21",
+        publication: "1987-05-26",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "ディスクブレーキ配置に関係する候補。前輪または後輪のブレーキまわりに配置。",
+        link: "https://patents.google.com/patent/US4667760A/en"
+      },
+      US4719984A: {
+        title: "Drive and braking system for vehicle",
+        summary: "駆動機構とブレーキ機構を車輪周辺に効率よく配置し、車両の駆動・制動レイアウトを改善する技術。",
+        area: "駆動/ブレーキ",
+        kind: "chassis",
+        x: 31,
+        y: 76,
+        priority: "1984-02-06",
+        publication: "1988-01-19",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "駆動系と制動系の関係に関する候補。後輪ハブ、駆動系、ブレーキ側に配置。",
+        link: "https://patents.google.com/patent/US4719984A/en"
+      },
+      US4662471A: {
+        title: "Chain and shaft drive for balloon tired motorcycle",
+        summary: "大径または幅広タイヤを備えるオートバイで、チェーン駆動とシャフト駆動の配置を工夫する駆動系技術。",
+        area: "駆動系",
+        kind: "chassis",
+        x: 29,
+        y: 73,
+        priority: "1985-02-15",
+        publication: "1987-05-05",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "チェーン/シャフト駆動と大径タイヤ車両に関係する候補。後輪駆動部に配置。",
+        link: "https://patents.google.com/patent/US4662471A/en"
+      },
+      US4447801A: {
+        title: "Trouble shooting method of vehicles",
+        summary: "車両の異常検出や診断情報を整理し、故障箇所の特定を支援するトラブルシューティング方法。",
+        area: "診断/表示",
+        kind: "control",
+        x: 64,
+        y: 29,
+        priority: "1981-09-04",
+        publication: "1984-05-08",
+        assignee: "Yamaha Motor Co Ltd",
+        use: "車両診断や表示に関係する候補。メーター、警告表示、電装系として配置。",
+        link: "https://patents.google.com/patent/US4447801A/en"
+      },
+      USD267561S: {
+        title: "Motorcycle",
+        summary: "オートバイ全体の外観形状に関する意匠。車体、タンク、シート、前後まわりを含む全体シルエットが対象。",
+        area: "外観意匠",
+        kind: "design",
+        x: 50,
+        y: 22,
+        priority: "1980-08-27",
+        publication: "1983-01-11",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "車両全体の外観意匠候補。全体シルエットとして中央上部に配置。",
+        link: "https://patents.google.com/patent/USD267561S/en"
+      },
+      USD268998S: {
+        title: "Motorcycle",
+        summary: "オートバイの外観意匠。車体全体の造形、プロポーション、外装部品の見え方が対象。",
+        area: "外観意匠",
+        kind: "design",
+        x: 50,
+        y: 22,
+        priority: "1980-04-23",
+        publication: "1983-05-17",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "車両全体の外観意匠候補。全体シルエットとして中央上部に配置。",
+        link: "https://patents.google.com/patent/USD268998S/en"
+      },
+      USD277756S: {
+        title: "Motorcycle engine",
+        summary: "オートバイ用エンジンの外観意匠。エンジン本体の形状、外側から見える構成部の造形が対象。",
+        area: "エンジン意匠",
+        kind: "design",
+        x: 49,
+        y: 58,
+        priority: "1982-09-29",
+        publication: "1985-03-05",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "エンジン外観の意匠候補。エンジン本体に配置。",
+        link: "https://patents.google.com/patent/USD277756S/en"
+      },
+      USD288796S: {
+        title: "Motorcycle",
+        summary: "オートバイ全体の外観意匠。80年代中盤の車体シルエット、外装、タンク、シート周辺の見え方が対象。",
+        area: "外観意匠",
+        kind: "design",
+        x: 51,
+        y: 22,
+        priority: "1984-01-26",
+        publication: "1987-03-10",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "80年代中盤の車両外観意匠候補。車体全体のシルエットとして表示。",
+        link: "https://patents.google.com/patent/USD288796S/en"
+      },
+      JPH0790814B2: {
+        title: "Motorcycle",
+        summary: "オートバイの車体構造に関する技術。フレーム、外装、車体中央部の構成や部品配置に関係する候補。",
+        area: "車体構造",
+        kind: "chassis",
+        x: 53,
+        y: 43,
+        priority: "1987-08-08",
+        publication: "1995-10-04",
+        assignee: "Yamaha Hatsudoki Kabushiki Kaisha",
+        use: "1987年優先日の車体関連候補。フレーム、カウル、車体中央部として表示。",
+        link: "https://patents.google.com/patent/JPH0790814B2/en"
+      }
+    };
+
+    const uiText = {
+      ja: {
+        pageTitle: "淡路島AI技術リサーチ",
+        pageSubtitle: "代表的な80年代 Yamaha オートバイ画像を中心に、収集済み特許を関連部位へ配置した確認用ページです。採用実績の断定ではなく、特許タイトル・要約・対象部位からの関連表示です。",
+        modelSection: "代表車両",
+        imageSourcesTitle: "画像ソース",
+        imageSourcesBody: "Wikimedia Commons の再利用可能画像を使用。ページ下部の詳細欄で各画像の出典を確認できます。",
+        statusBadge: "関連部位の推定",
+        patentNumberLabel: "特許番号",
+        patentAreaLabel: "関連部位",
+        priorityLabel: "優先日",
+        publicationLabel: "公開日",
+        assigneeLabel: "権利者",
+        useLabel: "使われ方",
+        openGoogle: "Google Patentsで開く",
+        shownPatents: "この車両に表示中の特許",
+        legendEngine: "エンジン/吸排気",
+        legendChassis: "車体/足回り",
+        legendControl: "制御/診断",
+        legendDesign: "意匠",
+        techSummary: "技術要約",
+        claimSummary: "請求項の要約",
+        claimTree: "請求項ツリー",
+        strengths: "強み",
+        products: "適用された製品 / 適用候補",
+        relatedInfo: "関連情報",
+        summaryNote: "Google Patents の掲載情報をもとに、日本語で短く整理した要約です。",
+        claimNote: "Google Patents から取得した原文請求項をもとに整理しています。正式な請求項解釈には、原文請求項と図面の精読が必要です。",
+        productNote: "「適用候補」は、車両年代・技術領域・配置部位からの関連付けです。採用確定には部品表、サービスマニュアル、公式技術資料との照合が必要です。",
+        relatedArea: "関連部位",
+        priority: "優先日",
+        publication: "公開日",
+        assignee: "権利者",
+        mapReason: "表示理由"
+        ,
+        backHome: "トップへ"
+      },
+      en: {
+        pageTitle: "Awaji Island AI Technology Research",
+        pageSubtitle: "A technical reference page that maps collected Yamaha motorcycle patents onto representative 1980s Yamaha models. The map shows likely related locations based on patent titles, summaries, and claimed subject matter, not confirmed production adoption.",
+        modelSection: "Representative Models",
+        imageSourcesTitle: "Image Sources",
+        imageSourcesBody: "Reusable Wikimedia Commons images were used as source references. Attribution notes are shown in the detail panel.",
+        statusBadge: "Estimated Related Area",
+        patentNumberLabel: "Patent No.",
+        patentAreaLabel: "Related Area",
+        priorityLabel: "Priority",
+        publicationLabel: "Publication",
+        assigneeLabel: "Assignee",
+        useLabel: "Map Rationale",
+        openGoogle: "Open in Google Patents",
+        shownPatents: "Patents Shown for This Model",
+        legendEngine: "Engine / Intake / Exhaust",
+        legendChassis: "Chassis / Running Gear",
+        legendControl: "Control / Diagnostics",
+        legendDesign: "Design",
+        techSummary: "Technical Summary",
+        claimSummary: "Claim Summary",
+        claimTree: "Claim Tree",
+        strengths: "Strengths",
+        products: "Applied Products / Candidate Products",
+        relatedInfo: "Related Information",
+        summaryNote: "A concise English technical summary based on information available through Google Patents.",
+        claimNote: "This summary is organized from claim text obtained through Google Patents. Formal claim interpretation requires reading the original claims and drawings.",
+        productNote: "Candidate products are linked by period, technology area, and mapped vehicle location. Confirmed adoption requires parts lists, service manuals, or official Yamaha technical materials.",
+        relatedArea: "Related Area",
+        priority: "Priority",
+        publication: "Publication",
+        assignee: "Assignee",
+        mapReason: "Map Rationale"
+        ,
+        backHome: "Top"
+      }
+    };
+
+    const modelText = {
+      en: {
+        rd350: {
+          summary: "Two-stroke sport model. Intake, exhaust, cooling, seat, and design-related patents are mapped.",
+          imageCredit: "Image: manga-style reference image generated from a Wikimedia Commons Yamaha RD350 photograph, with a Yamaha factory-inspired background."
+        },
+        venture: {
+          summary: "Large touring motorcycle. Speed control, engine, brake, diagnostics, and design patents are mapped.",
+          imageCredit: "Image: manga-style reference image generated from a Wikimedia Commons 1983 Yamaha Venture Royale photograph, with a Yamaha factory-inspired background."
+        },
+        vmax: {
+          summary: "V4 sport cruiser. Intake/exhaust, drive, seat, and design-related patents are mapped.",
+          imageCredit: "Image: manga-style reference image generated from a Wikimedia Commons Yamaha V-Max photograph, with a Yamaha factory-inspired background."
+        },
+        fzr1000: {
+          summary: "Late-1980s large sport model. Exhaust control, brake, chassis, and design-related patents are mapped.",
+          imageCredit: "Image: manga-style reference image generated from a Wikimedia Commons Yamaha FZR1000 photograph, with a Yamaha factory-inspired background."
+        }
+      }
+    };
+
+    const patentText = {
+      en: {
+        US4542910A: {
+          area: "Rear suspension",
+          summary: "A motorcycle rear suspension arrangement using multiple links and a suspension element to control wheel movement relative to the sprung frame.",
+          use: "Mapped to the rear wheel and shock linkage area because the claims define a linked suspension system between sprung and unsprung members.",
+          claimSummary: "Independent claim 1 defines a suspension system with a sprung member, an unsprung wheel-supporting member, first and second links, a pivotal connection between the links, and a suspension element connected to an intermediate part of the first link. Dependent claims further specify the connection of the other end of the suspension element and the link geometry.",
+          claimTree: [{ label: "Claim 1: Linked suspension architecture", children: [{ label: "Sprung and unsprung members" }, { label: "Wheel supported by the unsprung member" }, { label: "First and second links" }, { label: "Pivotal connection between links" }, { label: "Suspension element connected to the first link" }] }, { label: "Dependent claims: suspension element connection", children: [{ label: "Other end connected to the sprung side" }, { label: "Specific connection to the first member" }] }],
+          strengths: ["Progressive suspension behavior", "Flexible shock placement", "Compact rear packaging", "Link-ratio tuning"],
+          products: ["RD/RZ sport-model suspension candidate", "1980s linked rear suspension systems", "Monocross-type suspension comparison"]
+        },
+        US4611561A: {
+          area: "Speed control / handlebar controls",
+          summary: "An automatic motorcycle speed control system that coordinates rider throttle operation with an actuator through a lost-motion connection.",
+          use: "Mapped near the handlebar and throttle controls because the claims cover automatic throttle positioning and manual override behavior.",
+          claimSummary: "Independent claim 1 defines a motorcycle automatic speed control mechanism with a throttle, rider-operated speed control, separate opening and closing coupling means, an actuator, and a lost-motion connection that permits manual operation independently of the actuator. Dependent claims specify common-axis support and lug-based lost motion.",
+          claimTree: [{ label: "Claim 1: Automatic speed control mechanism", children: [{ label: "Throttle movable in opening and closing directions" }, { label: "Rider-operated speed control" }, { label: "Separate opening and closing couplings" }, { label: "Automatic actuator" }, { label: "Lost-motion connection for manual override" }] }, { label: "Dependent claims: actuator/control element layout", children: [{ label: "Common rotational axis" }, { label: "Interengaging lugs" }] }],
+          strengths: ["Reduced touring fatigue", "Manual throttle compatibility", "Safety-oriented override", "High-value touring feature"],
+          products: ["Yamaha Venture Royale XVZ1200", "1980s touring motorcycles", "Cruise-control equipped models"]
+        },
+        US4809800A: {
+          area: "Exhaust system",
+          summary: "A compact motorcycle exhaust system using expansion chambers and a tuning tube arranged beneath and behind the engine/transmission assembly.",
+          use: "Mapped to the lower exhaust and muffler area because the claims define expansion chamber and tuning tube layout.",
+          claimSummary: "Independent claim 1 defines plural exhaust pipes, a first expansion chamber beneath the engine/transmission, an upward second portion near the transmission and rear wheel, a tuning tube as the sole connection into a second expansion chamber, and an outlet pipe. Dependent claims identify motorcycle application and collector structure.",
+          claimTree: [{ label: "Claim 1: Multi-chamber exhaust layout", children: [{ label: "Plural exhaust pipes" }, { label: "Expansion chamber beneath engine/transmission" }, { label: "Second chamber region near rear wheel" }, { label: "Tuning tube connection" }, { label: "Outlet pipe to atmosphere" }] }, { label: "Claims 2-3: application and collector", children: [{ label: "Motorcycle" }, { label: "Collector for plural exhaust pipes" }] }],
+          strengths: ["Exhaust pulse tuning", "Efficient under-engine packaging", "Noise and output balance", "Multi-cylinder applicability"],
+          products: ["Yamaha V-Max / VMX1200 exhaust candidate", "FZR exhaust-layout comparison", "1980s multi-cylinder motorcycles"]
+        },
+        US4785626A: {
+          area: "Exhaust control",
+          summary: "An exhaust-control valve arrangement positioned below the crankcase, with a crankcase recess that allows packaging and cooling of the valve assembly.",
+          use: "Mapped to the engine outlet and exhaust valve region because the claims cover exhaust flow-control valves below the crankcase.",
+          claimSummary: "Independent claim 1 defines a crankcase, multiple exhaust ports, exhaust pipes passing beneath the crankcase, valve means in those pipes, and a recess in the crankcase through which at least part of the valve means passes. Dependent claims add a transverse recess for cooling air and vehicle/motorcycle application.",
+          claimTree: [{ label: "Claim 1: Under-crankcase exhaust-control valve", children: [{ label: "Crankcase housing" }, { label: "Plural exhaust ports" }, { label: "Exhaust pipes passing beneath crankcase" }, { label: "Flow-control valve means" }, { label: "Crankcase recess for valve clearance" }] }, { label: "Dependent claims: cooling and vehicle use", children: [{ label: "Transverse cooling recess" }, { label: "Vehicle / motorcycle application" }] }],
+          strengths: ["Compact valve packaging", "Cooling of hot exhaust-control parts", "Lower-engine space efficiency", "Sport-bike exhaust control"],
+          products: ["Yamaha FZR1000", "EXUP-type exhaust-control comparison", "Late-1980s large sport models"]
+        },
+        US4860538A: {
+          area: "Exhaust control / expansion chamber",
+          summary: "A motorcycle exhaust layout with paired exhaust ports and pipes feeding a transverse expansion chamber beneath and behind the engine.",
+          use: "Mapped to the exhaust chamber and muffler region because the claims define paired exhaust pipes, transverse chamber layout, and tailpipe/muffler discharge.",
+          claimSummary: "Independent claim 1 defines paired oppositely facing exhaust ports, first and second exhaust pipes, a transverse expansion chamber beneath and behind the engine, and discharge means. Dependent claims specify paired tailpipe mufflers and same-side outlet arrangements.",
+          claimTree: [{ label: "Claim 1: Transverse expansion chamber", children: [{ label: "Oppositely facing exhaust ports" }, { label: "First and second exhaust pipes" }, { label: "Expansion chamber beneath/rear of engine" }, { label: "One pipe extends across the chamber" }, { label: "Discharge to atmosphere" }] }, { label: "Claims 2-3: muffler outlet layout", children: [{ label: "Pair of tailpipe mufflers" }, { label: "Same-side exit arrangement" }] }],
+          strengths: ["Exhaust packaging", "Mass centralization", "Muffler layout freedom", "Exhaust pulse management"],
+          products: ["Yamaha FZR1000 exhaust candidate", "Yamaha V-Max exhaust comparison", "1980s multi-cylinder models"]
+        }
+      }
+    };
+
+    const preciseClaimProfiles = {
+      US4542910A: {
+        claimSummary: "独立請求項1は、ばね上部材とばね下部材の相対移動に対し、第1リンク、第2リンク、リンク間の枢支部、サスペンション要素の一端を第1リンク途中へ接続する構成を定義する。従属項は、サスペンション要素の他端をばね上側へ接続する態様、リンク配置、車輪支持部との接続関係を具体化する。",
+        claimTree: [
+          { label: "請求項1: リンク式サスペンション基本構成", children: [{ label: "ばね上部材とばね下部材" }, { label: "車輪を支持するばね下部材" }, { label: "第1リンクと第2リンク" }, { label: "リンク同士の枢支接続" }, { label: "サスペンション要素を第1リンク途中へ接続" }] },
+          { label: "従属項群: サスペンション要素の接続先", children: [{ label: "他端をオートバイのばね上部材へ接続" }, { label: "第1部材への直接接続" }] },
+          { label: "従属項群: リンク配置の具体化", children: [{ label: "相対移動に応じてサスペンション要素を荷重する幾何関係" }, { label: "車輪支持部とフレーム側の接続関係" }] }
+        ],
+        strengths: ["プログレッシブな懸架特性を作りやすい", "ショック配置の自由度", "リア周りのパッケージング改善", "リンク比の設計自由度"],
+        products: ["Yamaha RD/RZ系リアサスペンション候補", "1980年代スポーツ車のリンク式リアサスペンション", "モノクロス系サスペンション技術の比較対象"]
+      },
+      US4611561A: {
+        claimSummary: "独立請求項1は、ライダー操作の速度制御部、スロットル、回転制御要素、開側/閉側の別個の連結手段、自動アクチュエータ、ロストモーション連結を組み合わせた自動速度制御機構を定義する。従属項は、共通軸上の制御要素/アクチュエータ要素、係合ラグによるロストモーション、具体的な連結構造を限定する。",
+        claimTree: [
+          { label: "請求項1: 二輪車用自動速度制御の基本構成", children: [{ label: "開閉方向に動くスロットル" }, { label: "ライダー操作の速度制御部" }, { label: "回転制御要素" }, { label: "開側と閉側を分けた正方向連結" }, { label: "自動位置決め用アクチュエータ" }, { label: "手動操作を妨げないロストモーション連結" }] },
+          { label: "従属項群: 共通軸配置", children: [{ label: "制御要素とアクチュエータ要素を共通軸で回転支持" }, { label: "ハウジング内への集約" }] },
+          { label: "従属項群: ロストモーション機構", children: [{ label: "係合ラグによる遅れ接続" }, { label: "手動操作と自動操作の干渉低減" }] }
+        ],
+        strengths: ["長距離走行時の負担軽減", "手動スロットル操作との両立", "安全側の解除設計に展開しやすい", "大型ツアラー向けの商品性"],
+        products: ["Yamaha Venture Royale XVZ1200", "1980年代大型ツアラー", "クルーズコントロール装備車の比較対象"]
+      },
+      US4809800A: {
+        claimSummary: "独立請求項1は、エンジン下方に第1拡張室、その後方上方に第2部分を持つ排気装置、複数排気管からの導入、チューニングチューブを介した第2拡張室への唯一の接続、排気出口管の位置関係を定義する。従属項は、対象車両をオートバイとする点、複数排気管を集合部へ導く構成を限定する。",
+        claimTree: [
+          { label: "請求項1: 二段拡張室を持つ排気システム", children: [{ label: "車体フレームと前後輪" }, { label: "エンジン/変速機アセンブリ" }, { label: "複数の排気管" }, { label: "エンジン下方の第1拡張室" }, { label: "変速機近傍・後輪前方へ立ち上がる第2部分" }, { label: "チューニングチューブで第2拡張室へ接続" }] },
+          { label: "請求項2: オートバイへの適用" },
+          { label: "請求項3: 集合部", children: [{ label: "複数排気管を単一出口のコレクタへ接続" }] }
+        ],
+        strengths: ["排気脈動の調整", "車体下部スペースの有効利用", "消音と性能の両立", "多気筒エンジンへの適用性"],
+        products: ["Yamaha V-Max / VMX1200 排気系候補", "FZR系排気レイアウト比較対象", "1980年代多気筒車の排気装置"]
+      },
+      US4785626A: {
+        claimSummary: "独立請求項1は、クランクケース、複数排気ポート、クランクケース下を通る排気管、排気管内の流量制御弁、弁の少なくとも一部を通すクランクケース側の凹部を定義する。従属項は、凹部を横方向に貫通させて排気管と弁を冷却する構成、車両との組合せ、オートバイへの適用を広げる。",
+        claimTree: [
+          { label: "請求項1: エンジン下部排気制御弁の配置", children: [{ label: "クランクケースハウジング" }, { label: "複数の排気ポート" }, { label: "クランクケース下を通る排気管" }, { label: "排気管内の流量制御弁" }, { label: "弁を逃がすクランクケース凹部" }] },
+          { label: "請求項2: 冷却用凹部", children: [{ label: "凹部を横方向に貫通" }, { label: "空気流で排気管と弁を冷却" }] },
+          { label: "従属項群: 車両適用", children: [{ label: "内燃機関搭載車両" }, { label: "オートバイへの適用" }] }
+        ],
+        strengths: ["排気制御弁の搭載スペース確保", "高温部品の冷却性", "エンジン下部のコンパクト化", "高性能スポーツ車向け排気制御"],
+        products: ["Yamaha FZR1000", "EXUP系排気制御の比較対象", "80年代後半の大型スポーツ車"]
+      },
+      US4860538A: {
+        claimSummary: "独立請求項1は、対向する排気ポートを持つエンジン、左右の排気管、エンジン後下方に横置きされる拡張室、排気管の一方が拡張室内を横断して終端する構成、外気への排出手段を定義する。従属項は、左右マフラー、同側配置、後輪との位置関係を具体化する。",
+        claimTree: [
+          { label: "請求項1: 横置き拡張室を持つオートバイ排気構成", children: [{ label: "対向する一対の排気ポート" }, { label: "第1/第2排気管" }, { label: "エンジン後下方の横置き拡張室" }, { label: "排気管が拡張室内を横断して終端" }, { label: "外気への排出手段" }] },
+          { label: "請求項2-3: マフラー配置", children: [{ label: "一対のテールパイプマフラー" }, { label: "同じ側からの出口配置" }, { label: "後輪片側への集約" }] },
+          { label: "従属項群: 拡張室と車体の関係", children: [{ label: "後輪前方/エンジン後方の空間利用" }, { label: "排気管の交差・終端位置" }] }
+        ],
+        strengths: ["左右排気の集合効率", "車体下部の重量集中", "マフラー配置の自由度", "排気脈動制御"],
+        products: ["Yamaha FZR1000 排気系候補", "Yamaha V-Max 排気系比較対象", "80年代多気筒車の集合排気"]
+      },
+      US4795420A: {
+        claimSummary: "独立請求項1は、複数排気管を同時制御するバルブ本体、各排気管に対応する離散排気通路、横方向に延びる弁軸、弁軸に固定された弁要素、各通路の有効反射面積を同時制御する構成を定義する。従属項は、排気通路の縦整列、千鳥配置、複数列配置を限定する。",
+        claimTree: [
+          { label: "請求項1: 複数排気管同時制御バルブ", children: [{ label: "排気管に固定されるバルブ本体" }, { label: "各排気管に対応する離散排気通路" }, { label: "横方向の弁軸" }, { label: "弁軸に固定された弁要素" }, { label: "各排気通路の反射面積を同時制御" }] },
+          { label: "従属項群: 排気通路配置", children: [{ label: "縦方向整列" }, { label: "縦方向千鳥配置" }, { label: "水平列と上下列の組合せ" }] },
+          { label: "従属項群: 制御対象", children: [{ label: "複数排気管の同期制御" }, { label: "排気脈動/反射波の調整" }] }
+        ],
+        strengths: ["複数気筒の排気を一括制御", "低中速トルク改善", "コンパクトな弁機構", "EXUP系技術との親和性"],
+        products: ["Yamaha FZR1000 排気制御候補", "Yamaha V-Max 排気制御比較対象", "多気筒スポーツ車"]
+      },
+      US4475617A: {
+        claimSummary: "独立請求項1は、オートバイの吸気系に過給機を含め、格納状態のスタンド近傍に過給機を配置して保護する構成を定義する。別独立項では、後輪支持アームの枢支部下方・エンジン後方・後輪近傍に過給機を置き、前向き排気ポートから排気管を後方へ導く配置を定義する。",
+        claimTree: [
+          { label: "請求項1: スタンド近傍配置の過給吸気系", children: [{ label: "オートバイフレーム/エンジン/駆動系" }, { label: "吸気圧を高める過給機" }, { label: "格納スタンド近傍へ配置" }, { label: "スタンドにより少なくとも部分的に保護" }] },
+          { label: "請求項2: エンジン前後ポート配置", children: [{ label: "過給機をエンジン後方へ配置" }, { label: "排気ポート前向き、吸気ポート後向き" }, { label: "排気管を下方後方へ導く" }] },
+          { label: "請求項3以降: 後輪/フレームとの関係", children: [{ label: "後輪支持アーム枢支部下方" }, { label: "フレーム下部材より上" }, { label: "後輪近傍での保護配置" }] }
+        ],
+        strengths: ["過給機の保護", "車体内スペース活用", "吸排気レイアウトの短縮", "スポーツ車向け高出力化"],
+        products: ["Yamaha RD/RZ系の過給研究候補", "2ストロークスポーツの吸気系比較対象", "1980年代過給オートバイ技術"]
+      },
+      US4592311A: {
+        claimSummary: "独立請求項1は、2サイクル・クランクケース圧縮エンジンにおいて、第1/第2シリンダ、分離された各クランクケース、各転送通路、向かい合うシリンダ側面の間に少なくとも一部を配置した吸気系を定義する。従属項は、直接/間接吸気、リードバルブ、ピストン吸気弁作用を具体化する。",
+        claimTree: [
+          { label: "請求項1: 2サイクル多気筒エンジンの中間吸気系", children: [{ label: "第1/第2シリンダとピストン" }, { label: "互いに分離された第1/第2クランクケース" }, { label: "各気筒用の転送通路" }, { label: "向かい合うシリンダ側面間の吸気系配置" }] },
+          { label: "請求項2-3: 直接/間接吸気", children: [{ label: "一方はクランクケースへ直接吐出" }, { label: "他方は間接吐出" }, { label: "リードバルブとピストン弁作用の組合せ" }] },
+          { label: "従属項群: 多気筒配置", children: [{ label: "オフセットシリンダ" }, { label: "クランクケース圧縮の分離" }, { label: "吸気通路のコンパクト化" }] }
+        ],
+        strengths: ["2ストローク多気筒の吸気効率改善", "エンジン幅の抑制", "各気筒吸気の最適化", "スポーツ車向け高出力化"],
+        products: ["Yamaha RD350LC / RD350 YPVS", "RZ/RD系2ストロークエンジン比較対象", "2サイクル多気筒スポーツ車"]
+      },
+      US4364340A: {
+        claimSummary: "独立請求項1は、燃料タンク下に搭載されるV型燃料噴射エンジン、V内側の吸気ポート、各ポートから立ち上がるミキシングボディ、燃料タンク下かつエンジン上方のサージタンク、側方吸気通路、エアフローメータを定義する。従属項は、水の侵入を避ける吸気経路、高さ関係、開口方向を限定する。",
+        claimTree: [
+          { label: "請求項1: V型燃料噴射エンジンの吸気配置", children: [{ label: "燃料タンク下のV型エンジン" }, { label: "V内側の吸気ポート" }, { label: "各ポートから上昇するミキシングボディ" }, { label: "燃料タンク下/エンジン上方のサージタンク" }, { label: "側方吸気通路とエアフローメータ" }] },
+          { label: "請求項2-4: 吸気通路と防水", children: [{ label: "エアクリーナへ下向きに延びる通路" }, { label: "水が入りにくいフレーム内領域への開口" }, { label: "サージタンク上面より高い通路部分" }] },
+          { label: "請求項5: 具体的な開口方向", children: [{ label: "前方、下方、後方へ回り込む吸気経路" }] }
+        ],
+        strengths: ["V型エンジンの高さ方向スペース活用", "吸気計測部品の搭載性", "防水性", "燃料タンク下のコンパクトな吸気系"],
+        products: ["Yamaha Venture Royale XVZ1200", "V型エンジン搭載ツアラー", "1980年代V型エンジン車の吸気系"]
+      },
+      US4457524A: {
+        claimSummary: "独立請求項1は、燃料タンク上面に上後方向きの凹部を設け、シート前端をその凹部へ差し込み、タンク上面とシート上面をほぼ同じ高さにして段差を抑え、シート後端をタンク後方へ延ばし、シートとタンクの間に保持手段を設ける構成を定義する。従属項は、ソケット/突起、弾性部材、保持テープなどの保持手段を限定する。",
+        claimTree: [
+          { label: "請求項1: タンク凹部に差し込むシート構造", children: [{ label: "ヘッドパイプ、タンクレール、シートレールを持つフレーム" }, { label: "タンク上面の上後方向き凹部" }, { label: "シート前端を凹部へ着座" }, { label: "タンクとシートの上面段差を抑制" }, { label: "シート/タンク間の保持手段" }] },
+          { label: "請求項2-3: ソケット保持", children: [{ label: "タンク上面のソケット" }, { label: "シート側突起" }, { label: "弾性部材で保持" }] },
+          { label: "請求項4以降: 代替保持手段", children: [{ label: "保持テープ" }, { label: "シート前端の安定保持" }] }
+        ],
+        strengths: ["乗車姿勢の自然化", "タンク/シート一体感", "シート取付の簡素化", "外観品質向上"],
+        products: ["Yamaha RD350LC / RD350 YPVS", "Yamaha V-Max / VMX1200", "1980年代スポーツ/クルーザーのシート構造"]
+      },
+      US4489803A: {
+        claimSummary: "独立請求項1は、車体フレーム、後輪支持部材、ダンパ、第1リンク、第2リンクの幾何関係を詳細に定義し、第1リンクの縦方向配置、スイングアーム枢支点から各接続点への平行関係、ダンパ/リンクを特定ライン上方へ配置する構成を定義する。従属項は、接続点のオフセットやリンクの傾斜を限定する。",
+        claimTree: [
+          { label: "請求項1: リアサスペンションのリンク幾何", children: [{ label: "車体フレームと後輪支持部材" }, { label: "後輪支持部材の上下揺動" }, { label: "ダンパ、第1リンク、第2リンク" }, { label: "接続点O/A/B/C/Dの位置関係" }, { label: "ダンパとリンクをスイングアームライン上方へ配置" }] },
+          { label: "請求項2: 第4接続点の前方オフセット" },
+          { label: "請求項3-4: 第3接続点と第2リンク傾斜", children: [{ label: "直交ラインに対する下方配置" }, { label: "前下がりに傾斜する第2リンク" }] }
+        ],
+        strengths: ["リンク作動特性の精密設計", "リアサスのコンパクト化", "路面追従性", "スポーツ車向け操縦安定性"],
+        products: ["Yamaha RD/RZ系スポーツ車", "リンク式リアサスペンション搭載車", "モノクロス系サスペンション比較対象"]
+      },
+      US4667760A: {
+        claimSummary: "独立請求項1は、左右輪を持つ車両の駆動軸にブレーキディスクを固定し、エンジンまたはファイナルドライブ側に固定されるブレーキケースでディスクを囲い、ケース開口からブレーキパッドを軸方向に取り外せる構成を定義する。従属項は、機械式/油圧式/キャリパ式アクチュエータを限定する。",
+        claimTree: [
+          { label: "請求項1: 駆動軸上ディスクブレーキ配置", children: [{ label: "左右に離れた車輪と車軸" }, { label: "エンジンから駆動軸を介してファイナルドライブへ伝達" }, { label: "駆動軸と一体回転するブレーキディスク" }, { label: "ブレーキケースでディスクを包囲" }, { label: "開口からパッドを軸方向に交換可能" }] },
+          { label: "請求項2-4: 作動方式", children: [{ label: "機械式アクチュエータ" }, { label: "油圧式アクチュエータ" }, { label: "キャリパ構成" }] },
+          { label: "従属項群: 整備性", children: [{ label: "ケースを車両から外さずパッド交換" }] }
+        ],
+        strengths: ["ブレーキ整備性", "駆動系との一体配置", "保護されたブレーキディスク", "ATV/特殊車両への展開性"],
+        products: ["Yamaha Venture系駆動/制動構造の比較対象", "シャフトドライブ車", "四輪/三輪系派生車両"]
+      },
+      US4719984A: {
+        claimSummary: "独立請求項1は、鞍乗り座席、前輪、後方の左右後輪、ファイナルドライブ、エンジン、開放フレーム内を縦方向に延びる駆動軸、座席下の駆動軸に固定されたブレーキディスク、露出ブレーキハウジング、後輪に作用する唯一のブレーキとしての構成を定義する。従属項は、ブレーキハウジングの固定先を限定する。",
+        claimTree: [
+          { label: "請求項1: 鞍乗り車両の駆動軸ブレーキ", children: [{ label: "前輪と後方左右後輪" }, { label: "座席下/前方のエンジン" }, { label: "エンジンからファイナルドライブへ延びる駆動軸" }, { label: "駆動軸に固定されたブレーキディスク" }, { label: "後輪用唯一ブレーキとして機能" }] },
+          { label: "請求項2-4: ブレーキハウジング固定", children: [{ label: "駆動軸を囲むチューブへ固定" }, { label: "ファイナルドライブ外側ハウジングへ固定" }, { label: "管状部材への固定" }] },
+          { label: "従属項群: 開放フレーム内配置", children: [{ label: "座席下スペース活用" }, { label: "露出ハウジングで整備性確保" }] }
+        ],
+        strengths: ["後輪ブレーキの集中配置", "駆動系と制動系の統合", "整備性", "三輪/四輪派生車への適用性"],
+        products: ["Yamaha ATV/特殊鞍乗り車両", "Venture系ではなく派生車両の比較対象", "駆動軸ブレーキ構造"]
+      },
+      US4662471A: {
+        claimSummary: "独立請求項1は、フレーム幅とほぼ同じ幅のバルーンタイヤ後輪、トレーリングアーム、エンジン/変速機、トレーリングアーム上の中間軸、変速機出力から中間軸一端へ駆動し、中間軸他端からドライブシャフトで後輪へ駆動する構成を定義する。従属項は、ドライブシャフトをトレーリングアーム内に収める点、ベベルギヤ、リング/ピニオン最終駆動を限定する。",
+        claimTree: [
+          { label: "請求項1: バルーンタイヤ車の中間軸駆動", children: [{ label: "フレーム幅に近い幅広後輪" }, { label: "後輪を支持するトレーリングアーム" }, { label: "変速機を含むエンジンクランクケース" }, { label: "トレーリングアーム上の中間軸" }, { label: "変速機出力から中間軸へ駆動" }, { label: "中間軸からドライブシャフトで後輪へ駆動" }] },
+          { label: "請求項2: ドライブシャフト内蔵", children: [{ label: "トレーリングアーム内にシャフトを収容" }] },
+          { label: "請求項3-4: ギヤ伝達", children: [{ label: "ベベルギヤでシャフトへ伝達" }, { label: "リング/ピニオンで最終駆動" }] }
+        ],
+        strengths: ["幅広タイヤと駆動系の両立", "駆動部の保護", "オフロード耐久性", "後輪周辺のコンパクト化"],
+        products: ["Yamaha BW系/バルーンタイヤ車候補", "オフロード特殊車", "幅広タイヤ駆動系"]
+      },
+      US4447801A: {
+        claimSummary: "独立請求項1は、複数の車両状態を個別警告装置で監視し、メインスイッチ投入時に全警告を一定時間作動させ、エンジン始動を検出し、各警告装置を順次作動後、監視状態が正常であれば順次停止する方法を定義する。従属項は、メイン警告装置、異常時再作動、点滅/連続表示の切替を限定する。",
+        claimTree: [
+          { label: "請求項1: 複数警告装置の自己診断表示方法", children: [{ label: "メインスイッチ投入時に全警告を一定時間作動" }, { label: "エンジン始動を検出" }, { label: "個別警告を順次作動" }, { label: "正常条件なら各警告を停止" }] },
+          { label: "請求項2: メイン警告装置", children: [{ label: "個別警告と同時作動" }, { label: "異常時にメイン警告を再作動" }] },
+          { label: "請求項3-4: 表示モード制御", children: [{ label: "異常表示後にのみモード変更可能" }, { label: "点滅/連続モードの切替" }] }
+        ],
+        strengths: ["始動時のランプチェック", "異常箇所の把握", "ライダーへの認知性", "高機能ツアラー向け電装価値"],
+        products: ["Yamaha Venture Royale XVZ1200", "大型ツアラーの警告表示/診断系", "1980年代高機能メーター車"]
+      },
+      USD267561S: {
+        claimSummary: "単一クレームは「図示されたオートバイの装飾的意匠」を保護する。機能的構成ではなく、図面に現れる車両全体の外観印象が中心。",
+        claimTree: [{ label: "意匠クレーム", children: [{ label: "The ornamental design for a motorcycle, as shown." }, { label: "保護対象: 車両全体外観" }] }],
+        strengths: ["外観模倣の抑止", "モデル固有のシルエット保護", "ブランド印象の保護"],
+        products: ["1980年代Yamaha車両外観", "RD/RZ系または同時代モデルの意匠比較対象"]
+      },
+      USD268998S: {
+        claimSummary: "単一クレームは、図示されたオートバイの装飾的意匠を保護する。タンク、シート、外装、前後まわりの全体的な外観が判断対象。",
+        claimTree: [{ label: "意匠クレーム", children: [{ label: "The ornamental design for a motorcycle, as shown." }, { label: "保護対象: オートバイ外観" }] }],
+        strengths: ["車体デザイン保護", "同時代モデルとの差別化", "外装形状の権利化"],
+        products: ["Yamaha Venture Royale XVZ1200 外観比較対象", "1980年代ツアラー/ロードモデル意匠"]
+      },
+      USD277756S: {
+        claimSummary: "単一クレームは、図示されたオートバイ用エンジンの装飾的意匠を保護する。エンジンの外部から見える造形、カバー、フィン、ケースの印象が中心。",
+        claimTree: [{ label: "意匠クレーム", children: [{ label: "The ornamental design for a motorcycle engine, as shown." }, { label: "保護対象: エンジン外観" }] }],
+        strengths: ["エンジン外観の差別化", "裸で見える機械造形の保護", "大型車の商品性"],
+        products: ["Yamaha Venture Royale XVZ1200 エンジン外観比較", "V型/大型エンジン搭載車"]
+      },
+      USD288796S: {
+        claimSummary: "単一クレームは、図示かつ説明されたオートバイの装飾的意匠を保護する。車両全体の外装線、カウル、タンク、シート、前後バランスが中心。",
+        claimTree: [{ label: "意匠クレーム", children: [{ label: "The ornamental design for a motorcycle, as shown and described." }, { label: "保護対象: 車体全体外観" }] }],
+        strengths: ["スポーツ車外観の保護", "カウル/タンク/シートの一体印象", "80年代後半デザインの差別化"],
+        products: ["Yamaha FZR1000 外観比較対象", "Yamaha V-Max / VMX1200 外観比較対象", "80年代中盤以降のYamaha車両"]
+      },
+      JPS5758511A: {
+        claimSummary: "Google Patents の英語ページから原文請求項を抽出できなかったため、現時点では精密版ツリー未作成。水冷系の技術要約のみを表示する。",
+        claimTree: [{ label: "請求項未取得", children: [{ label: "対象: Water cooling system for motorcycle engine" }, { label: "次工程: 日本語公報またはPDFから請求項を取得して精密化" }] }],
+        strengths: ["冷却性能", "車体内配管の合理化", "水冷エンジンの搭載性"],
+        products: ["Yamaha RD350LC / RD350 YPVS", "1980年代前半の水冷2ストローク車"]
+      },
+      JPS57102519A: {
+        claimSummary: "Google Patents の英語ページから原文請求項を抽出できなかったため、現時点では精密版ツリー未作成。二段過給エンジンの技術要約のみを表示する。",
+        claimTree: [{ label: "請求項未取得", children: [{ label: "対象: Two-stage-supercharged engine for motorcycle" }, { label: "次工程: 日本語公報またはPDFから請求項を取得して精密化" }] }],
+        strengths: ["過給による出力向上", "吸気圧制御", "高性能エンジン研究"],
+        products: ["Yamaha RD/RZ系の過給研究候補", "1980年代過給オートバイ技術"]
+      },
+      JPH0790814B2: {
+        claimSummary: "Google Patents の英語ページから原文請求項を抽出できなかったため、現時点では精密版ツリー未作成。1987年優先日のオートバイ車体関連候補として表示する。",
+        claimTree: [{ label: "請求項未取得", children: [{ label: "対象: Motorcycle" }, { label: "次工程: 日本語登録公報またはPDFから請求項を取得して精密化" }] }],
+        strengths: ["車体構造", "部品配置", "外装/フレーム設計"],
+        products: ["Yamaha FZR1000", "80年代後半の大型スポーツ車"]
+      }
+    };
+
+    let activeModel = models[0];
+    let activePatent = patents[activeModel.patents[0]];
+    let currentLang = "ja";
+
+    function t(key) {
+      return uiText[currentLang][key] || uiText.ja[key] || key;
+    }
+
+    function localizeStaticText() {
+      document.querySelectorAll("[data-i18n]").forEach(node => {
+        node.textContent = t(node.dataset.i18n);
+      });
+      document.title = t("pageTitle");
+      const legendItems = document.querySelectorAll(".legend span");
+      if (legendItems.length >= 4) {
+        legendItems[0].lastChild.textContent = t("legendEngine");
+        legendItems[1].lastChild.textContent = t("legendChassis");
+        legendItems[2].lastChild.textContent = t("legendControl");
+        legendItems[3].lastChild.textContent = t("legendDesign");
+      }
+      document.getElementById("langJa").classList.toggle("active", currentLang === "ja");
+      document.getElementById("langEn").classList.toggle("active", currentLang === "en");
+      document.documentElement.lang = currentLang;
+    }
+
+    function modelSummary(model) {
+      return modelText[currentLang]?.[model.id]?.summary || model.summary;
+    }
+
+    function modelCredit(model) {
+      return modelText[currentLang]?.[model.id]?.imageCredit || model.imageCredit;
+    }
+
+    function patentProfile(number, patent) {
+      const precise = buildTechnicalProfile(number, patent);
+      const translated = patentText[currentLang]?.[number];
+      if (currentLang === "en" && !translated) {
+        return genericEnglishProfile(number, patent, precise);
+      }
+      if (!translated) {
+        return { ...precise, area: patent.area, summary: patent.summary, use: patent.use };
+      }
+      return {
+        ...precise,
+        ...translated,
+        claimTree: translated.claimTree || precise.claimTree,
+        strengths: translated.strengths || precise.strengths,
+        products: translated.products || precise.products
+      };
+    }
+
+    function patentArea(number, patent) {
+      if (currentLang === "en" && !patentText.en?.[number]?.area) {
+        return genericEnglishArea(patent.area, patent.kind);
+      }
+      return patentText[currentLang]?.[number]?.area || patent.area;
+    }
+
+    function patentSummary(number, patent) {
+      if (currentLang === "en" && !patentText.en?.[number]?.summary) {
+        return genericEnglishProfile(number, patent, buildTechnicalProfile(number, patent)).summary;
+      }
+      return patentText[currentLang]?.[number]?.summary || patent.summary;
+    }
+
+    function patentUse(number, patent) {
+      if (currentLang === "en" && !patentText.en?.[number]?.use) {
+        return genericEnglishProfile(number, patent, buildTechnicalProfile(number, patent)).use;
+      }
+      return patentText[currentLang]?.[number]?.use || patent.use;
+    }
+
+    function genericEnglishArea(area, kind) {
+      const areaMap = {
+        "リアサスペンション": "Rear suspension",
+        "速度制御/ハンドル周辺": "Speed control / handlebar controls",
+        "排気系": "Exhaust system",
+        "排気制御": "Exhaust control",
+        "エンジン/排気制御": "Engine / exhaust control",
+        "吸気系": "Intake system",
+        "2ストローク吸気": "Two-stroke intake system",
+        "エンジン": "Engine",
+        "シート": "Seat",
+        "水冷系": "Water cooling system",
+        "過給エンジン": "Supercharged engine",
+        "ブレーキ": "Brake system",
+        "駆動/ブレーキ": "Drive / brake system",
+        "駆動系": "Drive system",
+        "診断/表示": "Diagnostics / display",
+        "外観意匠": "Exterior design",
+        "エンジン意匠": "Engine design",
+        "車体構造": "Chassis structure"
+      };
+      return areaMap[area] || (kind === "design" ? "Design" : "Technical area");
+    }
+
+    function genericEnglishProfile(number, patent, precise) {
+      const area = genericEnglishArea(patent.area, patent.kind);
+      if (patent.kind === "design") {
+        return {
+          area,
+          summary: `A Yamaha design patent concerning the ornamental appearance of ${patent.title.toLowerCase()}.`,
+          use: `Mapped as a design-related item because the claim protects the visual appearance shown in the patent drawings.`,
+          claimSummary: `The claim is an ornamental design claim for ${patent.title.toLowerCase()}, as shown in the patent drawings. It does not claim a functional mechanism; the protected subject is the visual impression of the vehicle or engine.`,
+          claimTree: [
+            { label: "Design claim", children: [{ label: `Subject: ${patent.title}` }, { label: "Protected scope: ornamental appearance shown in the drawings" }] },
+            { label: "Evaluation points", children: [{ label: "Overall visual impression" }, { label: "Body proportions and visible component shapes" }, { label: "Differences from comparable Yamaha models" }] }
+          ],
+          strengths: ["Exterior differentiation", "Protection against close imitation", "Brand visual identity"],
+          products: ["Representative 1980s Yamaha motorcycles", activeModel.name]
+        };
+      }
+
+      const kindText = {
+        engine: {
+          claimSummary: `The claim set concerns ${area.toLowerCase()} technology for a motorcycle or vehicle engine. The claimed subject generally combines engine-related passages, control members, or component placement to improve performance, packaging, cooling, or response.`,
+          claimTree: [
+            { label: "Independent-claim focus", children: [{ label: `${area} basic configuration` }, { label: "Relationship to the engine or vehicle body" }] },
+            { label: "Main elements", children: [{ label: "Engine or engine-related passage" }, { label: "Intake, exhaust, cooling, or control component" }, { label: "Mounting or flow-control relationship" }] },
+            { label: "Dependent-claim expansion", children: [{ label: "Specific passage, valve, pipe, chamber, or layout details" }, { label: "Vehicle installation details" }] }
+          ],
+          strengths: ["Improved engine performance", "Packaging efficiency", "Flow or thermal management", "Production-model adaptability"]
+        },
+        chassis: {
+          claimSummary: `The claim set concerns ${area.toLowerCase()} layout or structure. The claimed subject generally defines how vehicle-body, wheel, support, brake, seat, or drive components are arranged to improve stability, serviceability, packaging, or rider usability.`,
+          claimTree: [
+            { label: "Independent-claim focus", children: [{ label: `${area} basic layout` }, { label: "Relationship between frame, wheel, support, or rider-contact components" }] },
+            { label: "Main elements", children: [{ label: "Frame or support member" }, { label: "Wheel, suspension, brake, drive, or seat component" }, { label: "Mounting or linkage relationship" }] },
+            { label: "Dependent-claim expansion", children: [{ label: "Specific connection points" }, { label: "Actuator, bracket, link, or mounting details" }] }
+          ],
+          strengths: ["Packaging efficiency", "Handling or braking performance", "Serviceability", "Rider usability"]
+        },
+        control: {
+          claimSummary: `The claim set concerns ${area.toLowerCase()} for a motorcycle or vehicle. The claimed subject generally combines sensors, switches, controls, warning devices, actuators, or display logic to reduce rider workload or improve vehicle-state awareness.`,
+          claimTree: [
+            { label: "Independent-claim focus", children: [{ label: "Vehicle-state detection" }, { label: "Control or diagnostic logic" }, { label: "Rider interface or warning output" }] },
+            { label: "Main elements", children: [{ label: "Sensor, switch, or warning device" }, { label: "Control circuit or actuator" }, { label: "Display or rider operation element" }] },
+            { label: "Dependent-claim expansion", children: [{ label: "Operating conditions" }, { label: "Warning modes or safety-side behavior" }] }
+          ],
+          strengths: ["Reduced rider workload", "Improved diagnostics", "Higher touring value", "Safety-oriented operation"]
+        }
+      };
+      const base = kindText[patent.kind] || kindText.chassis;
+      return {
+        area,
+        summary: `${patent.title}: ${base.claimSummary}`,
+        use: `Mapped to ${area.toLowerCase()} because the patent title and claim set relate to this vehicle area. This is a technical mapping candidate, not confirmed production adoption.`,
+        claimSummary: base.claimSummary,
+        claimTree: base.claimTree,
+        strengths: base.strengths,
+        products: [activeModel.name, "Representative 1980s Yamaha models", "Candidate application based on technology area"]
+      };
+    }
+
+    const modelList = document.getElementById("modelList");
+    const patentList = document.getElementById("patentList");
+    const bikeWrap = document.getElementById("bikeWrap");
+    const bikeImage = document.getElementById("bikeImage");
+
+    function renderModels() {
+      modelList.innerHTML = "";
+      models.forEach(model => {
+        const button = document.createElement("button");
+        button.className = `model-button${model.id === activeModel.id ? " active" : ""}`;
+        const modelIndex = models.findIndex(item => item.id === model.id) + 1;
+        const label = model.name;
+        button.setAttribute("aria-label", label);
+        button.title = label;
+        button.innerHTML = `<span class="model-name">${model.name}</span><span class="model-meta">${model.years}</span>`;
+        button.addEventListener("click", () => {
+          activeModel = model;
+          activePatent = patents[model.patents[0]];
+          render();
+        });
+        modelList.appendChild(button);
+      });
+    }
+
+    function renderPins() {
+      [...bikeWrap.querySelectorAll(".pin")].forEach(pin => pin.remove());
+      activeModel.patents.forEach(number => {
+        const patent = patents[number];
+        const pin = document.createElement("button");
+        pin.className = `pin ${patent.kind}${activePatent === patent ? " active" : ""}`;
+        pin.style.left = `${patent.x}%`;
+        pin.style.top = `${patent.y}%`;
+        pin.textContent = number;
+        pin.title = `${number}: ${patentArea(number, patent)}`;
+        pin.addEventListener("click", () => {
+          activePatent = patent;
+          renderPatent();
+          renderPins();
+          renderPatentList();
+          openPatentSummary(number, patent);
+        });
+        bikeWrap.appendChild(pin);
+      });
+    }
+
+    function renderPatentList() {
+      patentList.innerHTML = "";
+      activeModel.patents.forEach(number => {
+        const patent = patents[number];
+        const button = document.createElement("button");
+        button.className = `patent-button${activePatent === patent ? " active" : ""}`;
+        button.innerHTML = `<span class="patent-no">${number}</span><span class="patent-area">${patentArea(number, patent)} / ${patent.title}</span>`;
+        button.addEventListener("click", () => {
+          activePatent = patent;
+          renderPatent();
+          renderPins();
+          renderPatentList();
+          openPatentSummary(number, patent);
+        });
+        patentList.appendChild(button);
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function openPatentSummary(number, patent) {
+      const profile = patentProfile(number, patent);
+      const summaryWindow = window.open("", `patent_${number}`, "width=820,height=760");
+      if (!summaryWindow) {
+        return;
+      }
+      const html = `<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${escapeHtml(number)} - Summary</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, Arial, sans-serif;
+      background: #f6f8fa;
+      color: #1f2937;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 28px 18px 44px;
+    }
+    .url {
+      display: block;
+      overflow-wrap: anywhere;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #0f83d8;
+      font-size: 14px;
+      box-shadow: 0 8px 24px rgba(31, 41, 55, .06);
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    .title {
+      margin: 0 0 18px;
+      color: #4b5563;
+      font-size: 15px;
+    }
+    section {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 14px;
+      box-shadow: 0 8px 24px rgba(31, 41, 55, .06);
+    }
+    h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+    dl {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 8px 12px;
+      margin: 0;
+      font-size: 14px;
+    }
+    dt { color: #6b7280; font-weight: 700; }
+    dd { margin: 0; }
+    .note {
+      color: #6b7280;
+      font-size: 12px;
+    }
+    .tree {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 14px;
+    }
+    .tree li {
+      margin: 6px 0;
+    }
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .pill {
+      display: inline-flex;
+      border: 1px solid #c8d4e4;
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: #f0f9ff;
+      color: #075985;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="url" href="${escapeHtml(patent.link)}" target="_blank" rel="noreferrer">${escapeHtml(patent.link)}</a>
+    <h1>${escapeHtml(number)}</h1>
+    <p class="title">${escapeHtml(patent.title)}</p>
+    <section>
+      <h2>${escapeHtml(t("techSummary"))}</h2>
+      <p>${escapeHtml(profile.summary || patentSummary(number, patent))}</p>
+      <p class="note">${escapeHtml(t("summaryNote"))}</p>
+    </section>
+    <section>
+      <h2>${escapeHtml(t("claimSummary"))}</h2>
+      <p>${escapeHtml(profile.claimSummary)}</p>
+      <p class="note">${escapeHtml(t("claimNote"))}</p>
+    </section>
+    <section>
+      <h2>${escapeHtml(t("claimTree"))}</h2>
+      ${renderTree(profile.claimTree)}
+    </section>
+    <section>
+      <h2>${escapeHtml(t("strengths"))}</h2>
+      <div class="pill-list">${profile.strengths.map(item => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>
+    </section>
+    <section>
+      <h2>${escapeHtml(t("products"))}</h2>
+      <div class="pill-list">${profile.products.map(item => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>
+      <p class="note">${escapeHtml(t("productNote"))}</p>
+    </section>
+    <section>
+      <h2>${escapeHtml(t("relatedInfo"))}</h2>
+      <dl>
+        <dt>${escapeHtml(t("relatedArea"))}</dt><dd>${escapeHtml(profile.area || patentArea(number, patent))}</dd>
+        <dt>${escapeHtml(t("priority"))}</dt><dd>${escapeHtml(patent.priority)}</dd>
+        <dt>${escapeHtml(t("publication"))}</dt><dd>${escapeHtml(patent.publication)}</dd>
+        <dt>${escapeHtml(t("assignee"))}</dt><dd>${escapeHtml(patent.assignee)}</dd>
+        <dt>${escapeHtml(t("mapReason"))}</dt><dd>${escapeHtml(profile.use || patentUse(number, patent))}</dd>
+      </dl>
+    </section>
+  </main>
+</body>
+</html>`;
+      summaryWindow.document.open();
+      summaryWindow.document.write(html);
+      summaryWindow.document.close();
+    }
+
+    function renderTree(nodes) {
+      return `<ul class="tree">${nodes.map(node => {
+        const children = node.children?.length ? renderTree(node.children) : "";
+        return `<li>${escapeHtml(node.label)}${children}</li>`;
+      }).join("")}</ul>`;
+    }
+
+    function buildTechnicalProfile(number, patent) {
+      if (preciseClaimProfiles[number]) {
+        return preciseClaimProfiles[number];
+      }
+      const productMap = {
+        rd350: ["Yamaha RD350LC / RD350 YPVS", "RZ/RD系 2ストロークスポーツ", "1980年代前半の水冷2ストローク車"],
+        venture: ["Yamaha Venture Royale XVZ1200", "大型ツアラー", "巡航制御・診断・快適装備を持つ車両群"],
+        vmax: ["Yamaha V-Max / VMX1200", "V4スポーツクルーザー", "大排気量エンジン/駆動系を持つ車両群"],
+        fzr1000: ["Yamaha FZR1000", "80年代後半の大型スポーツ", "EXUP期の排気制御・高性能ブレーキ車両群"]
+      };
+      const currentProducts = productMap[activeModel.id] || [activeModel.name];
+      const design = patent.kind === "design";
+      const area = patent.area;
+
+      if (design) {
+        return {
+          claimSummary: `${area}に関する意匠権で、車両またはエンジンの外観形状を保護対象とする。技術的な機能請求項ではなく、外観上のまとまり、プロポーション、部品の見え方が中心。`,
+          claimTree: [
+            { label: "意匠の対象", children: [{ label: patent.title }, { label: area }] },
+            { label: "保護される見え方", children: [{ label: "車体またはエンジンの外形" }, { label: "タンク、シート、外装、前後まわりのプロポーション" }] },
+            { label: "比較観点", children: [{ label: "全体印象" }, { label: "特徴的な外装線" }, { label: "同時代モデルとの差分" }] }
+          ],
+          strengths: ["外観差別化", "ブランドらしさの保護", "模倣抑止", "車両全体の印象を保護"],
+          products: currentProducts
+        };
+      }
+
+      const templates = {
+        engine: {
+          claimSummary: `${area}に関する機構・配置を中心に、エンジン運転状態に応じて吸気または排気の流れを調整し、出力特性、搭載性、冷却性、応答性の改善を狙う構成。`,
+          claimTree: [
+            { label: "独立請求項の中心", children: [{ label: `${area}の基本構成` }, { label: "車体またはエンジンへの配置関係" }] },
+            { label: "構成要素", children: [{ label: "エンジン本体" }, { label: "吸気/排気通路または冷却経路" }, { label: "制御部材または接続部材" }] },
+            { label: "作用", children: [{ label: "流量・圧力・温度・脈動の調整" }, { label: "低中速と高速域の性能バランス" }] },
+            { label: "従属項で広がる範囲", children: [{ label: "弁、通路、配管、チャンバー形状" }, { label: "車体内での搭載位置" }, { label: "複数気筒または2ストローク/4ストロークへの適用" }] }
+          ],
+          strengths: ["出力特性の改善", "車体搭載性", "応答性向上", "排気音/排気効率の調整", "量産車への展開性"]
+        },
+        chassis: {
+          claimSummary: `${area}の部品配置、支持構造、連結関係を中心に、限られた二輪車レイアウトの中で剛性、操作性、整備性、制動性、乗り心地を改善する構成。`,
+          claimTree: [
+            { label: "独立請求項の中心", children: [{ label: `${area}の基本レイアウト` }, { label: "車体フレーム、車輪、支持部材との関係" }] },
+            { label: "構成要素", children: [{ label: "フレームまたは支持部材" }, { label: "車輪/スイングアーム/ブレーキ/シート" }, { label: "連結部または取付部" }] },
+            { label: "作用", children: [{ label: "荷重伝達の最適化" }, { label: "制動・懸架・乗車姿勢の改善" }] },
+            { label: "従属項で広がる範囲", children: [{ label: "具体的な取付位置" }, { label: "リンク形状またはブラケット形状" }, { label: "大型車・スポーツ車・ツアラーへの適用" }] }
+          ],
+          strengths: ["操縦安定性", "制動性能", "乗り心地", "整備性", "部品配置の合理化"]
+        },
+        control: {
+          claimSummary: `${area}に関する検出・判断・操作系を組み合わせ、ライダーの操作負担を下げたり、車両状態の把握を容易にする制御/診断構成。`,
+          claimTree: [
+            { label: "独立請求項の中心", children: [{ label: "車両状態の検出" }, { label: "制御または診断処理" }, { label: "ライダーへの操作/表示インターフェース" }] },
+            { label: "構成要素", children: [{ label: "センサーまたはスイッチ" }, { label: "制御回路" }, { label: "アクチュエータまたは表示部" }] },
+            { label: "作用", children: [{ label: "設定値の維持" }, { label: "異常箇所の特定支援" }, { label: "長距離走行時の負担軽減" }] },
+            { label: "従属項で広がる範囲", children: [{ label: "速度、スロットル、警告表示の条件" }, { label: "解除条件や安全側動作" }, { label: "ツアラーや高機能車への適用" }] }
+          ],
+          strengths: ["操作負担の低減", "安全側制御", "診断性", "高付加価値化", "ツアラー向け商品性"]
+        }
+      };
+
+      const base = templates[patent.kind] || templates.chassis;
+      return {
+        claimSummary: base.claimSummary,
+        claimTree: base.claimTree,
+        strengths: base.strengths,
+        products: currentProducts
+      };
+    }
+
+    function renderPatent() {
+      document.getElementById("patentTitle").textContent = activePatent.title;
+      const number = Object.keys(patents).find(key => patents[key] === activePatent);
+      document.getElementById("patentNumber").textContent = number;
+      document.getElementById("patentArea").textContent = patentArea(number, activePatent);
+      document.getElementById("patentPriority").textContent = activePatent.priority;
+      document.getElementById("patentPublication").textContent = activePatent.publication;
+      document.getElementById("patentAssignee").textContent = activePatent.assignee;
+      document.getElementById("patentUse").textContent = patentUse(number, activePatent);
+      document.getElementById("patentLink").href = activePatent.link;
+      const sourceNote = currentLang === "en"
+        ? "Note: component locations are mapped from collected patent content. Confirmed production adoption requires service manuals, parts lists, or official Yamaha technical documents."
+        : "注: 部位表示は収集済み特許の内容からの関連付けです。実車への採用確定には、サービスマニュアル、部品表、Yamaha公式資料などでの追加確認が必要です。";
+      document.getElementById("modelSource").innerHTML = `${modelCredit(activeModel)}<br>${sourceNote}`;
+    }
+
+    function render() {
+      localizeStaticText();
+      document.getElementById("modelTitle").textContent = activeModel.name;
+      document.getElementById("modelSummary").textContent = `${activeModel.years} / ${modelSummary(activeModel)}`;
+      bikeImage.src = activeModel.image;
+      bikeImage.alt = `${activeModel.name} motorcycle`;
+      bikeImage.onerror = () => {
+        if (activeModel.fallbackImage && bikeImage.src !== activeModel.fallbackImage) {
+          bikeImage.src = activeModel.fallbackImage;
+        }
+      };
+      renderModels();
+      renderPins();
+      renderPatent();
+      renderPatentList();
+    }
+
+    document.getElementById("langJa").addEventListener("click", () => {
+      currentLang = "ja";
+      render();
+    });
+
+    document.getElementById("langEn").addEventListener("click", () => {
+      currentLang = "en";
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

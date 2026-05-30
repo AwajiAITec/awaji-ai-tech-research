@@ -1,0 +1,21 @@
+{
+  "id": "US4447801A",
+  "url": "https://patents.google.com/patent/US4447801A/en",
+  "status": 200,
+  "claims": [
+    "1. The method of monitoring a plurality of vehicle conditions by means of individual warning devices for each of such conditions comprising the steps of simultaneously operating all of said warning devices for a period of time when a main vehicle switch is closed, sensing the starting of the vehicle engine, and sequentially operating each of said warning devices and subsequently deactivating each warning device if the condition monitored is correct.",
+    "2. The monitoring method as set forth in claim 1 wherein the system further includes a main warning device and including the step of operating said main warning device simultaneously with the operating of the individual warning devices when the main vehicle switch is closed and reactivating the main warning device in the event a condition monitored is not correct and an individual warning device is not deactivated.",
+    "3. The monitoring method as set forth in claim 2 further including the step of permitting an operator to change the mode of the main warning device only after the main warning device has been activated upon the indication of an incorrect condition by one of the warning devices.",
+    "4. The monitoring method as set forth in claim 3 wherein the operator may control the main warning device between either a flashing mode or a continuous mode.",
+    "5. The monitoring method as set forth in claim 3 wherein the operator may activate the main warning device between a warning condition and an off condition.",
+    "6. The monitoring method as set forth in claim 1 further including the step of permitting the operator to sequentially activate the sequential operation of the warning devices at will.",
+    "7. The monitoring method as set forth in claim 6 wherein the system further includes a main warning device and including the step of operating said main warning device simultaneously with the operating of the individual warning devices when the main vehicle switch is closed and reactivating the main warning device in the event a condition monitored is not correct and an individual warning device is not deactivated.",
+    "8. The monitoring method as set forth in claim 7 further including the step of permitting an operator to change the mode of the main warning device only after the main warning device has been activated upon the indication of an incorrect condition by one of the warning devices.",
+    "9. A monitoring system for a plurality of vehicle conditions comprising a plurality of individual warning devices for each of such conditions, sensing means for sensing each of said conditions to activate the respective of said warning conditions when the sensed condition is incorrect, and means for simultaneously activating all of said warning devices for a period of time when the main vehicle switch is closed, sensing of the running of the vehicle engine, seqentially activating each of said warning devices for a period of time and deactivating such individual warning devices if the condition sensed by the respective sensing means is correct.",
+    "10. A monitoring system as set forth in claim 9 further including a main warning device and means for activating said main sensing device simultaneously with activating any of the individual warning devices.",
+    "11. A monitoring system as set forth in claim 10 further including main warning control means for changing the mode of said main warning device only after said main warning device has been initially activated.",
+    "12. A monitoring system as set forth in claim 9 further including reset means for selectively sequentially operating each of the warning devices and subsequently deactivating each of said warning devices if the condition monitored is correct and independent of the running of the vehicle engine.",
+    "13. A monitoring system as set forth in claim 12 further including a main warning device and means for activating said main sensing device simultaneously with activating any of the individual warning devices.",
+    "14. A monitoring system as set forth in claim 13 further including main warning control means for changing the mode of said main warning device only after said main warning device has been initially activated."
+  ]
+}

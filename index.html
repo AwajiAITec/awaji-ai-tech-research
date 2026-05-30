@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>淡路島AI技術リサーチ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --paper: #f6f8fa;
+      --panel: #ffffff;
+      --accent: #3ea8ff;
+      --accent-dark: #0f83d8;
+      --shadow: 0 8px 24px rgba(31, 41, 55, .06);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, Arial, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-inner,
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding-inline: 22px;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-block: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    .brand-name {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f3f7fb;
+      flex: 0 0 auto;
+    }
+
+    .lang-switch button {
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: #4b5563;
+      padding: 7px 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .lang-switch button.active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(62, 168, 255, .25);
+    }
+
+    main {
+      padding-block: 34px 56px;
+    }
+
+    .hero {
+      padding: 28px 0 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 12px;
+      color: var(--accent-dark);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    h2 {
+      margin: 0;
+      max-width: 820px;
+      font-size: 34px;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 860px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.9;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin: 24px 0 12px;
+    }
+
+    .section-head h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .theme-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 250px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+
+    .theme-card:hover {
+      transform: translateY(-2px);
+      border-color: #9dd5ff;
+      box-shadow: 0 14px 28px rgba(31, 41, 55, .1);
+    }
+
+    .theme-visual {
+      height: 132px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(62, 168, 255, .2), transparent 32%),
+        linear-gradient(90deg, rgba(31,41,55,.05) 1px, transparent 1px),
+        linear-gradient(rgba(31,41,55,.05) 1px, transparent 1px),
+        #fbfdff;
+      background-size: auto, 28px 28px, 28px 28px, auto;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+    }
+
+    .theme-visual img {
+      max-width: 92%;
+      max-height: 112px;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 18px rgba(31, 41, 55, .16));
+      border-radius: 8px;
+    }
+
+    .theme-body {
+      padding: 16px;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .theme-body h4 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .theme-body p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .theme-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      border: 1px solid #dbeafe;
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: #f0f9ff;
+      color: #075985;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .placeholder {
+      pointer-events: none;
+      opacity: .72;
+    }
+
+    .placeholder .theme-visual {
+      background:
+        linear-gradient(90deg, rgba(31,41,55,.05) 1px, transparent 1px),
+        linear-gradient(rgba(31,41,55,.05) 1px, transparent 1px),
+        #ffffff;
+      background-size: 28px 28px;
+    }
+
+    .placeholder-mark {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      border: 2px dashed #cbd5e1;
+      display: grid;
+      place-items: center;
+      color: #94a3b8;
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    footer {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 22px 28px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 860px) {
+      .header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      h2 {
+        font-size: 27px;
+      }
+
+      .theme-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <img class="brand-logo" src="assets/brand/awaji_tech_logo_01.png" alt="">
+        <h1 class="brand-name" data-i18n="siteName">淡路島AI技術リサーチ</h1>
+      </div>
+      <div class="lang-switch" aria-label="Language">
+        <button type="button" id="langJa" class="active">日本語</button>
+        <button type="button" id="langEn">English</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow" data-i18n="eyebrow">技術テーマライブラリ</p>
+      <h2 data-i18n="heroTitle">AIで特許・技術情報を読み解き、テーマ別に可視化します。</h2>
+      <p class="lead" data-i18n="heroLead">このトップページは技術テーマを選択する入口です。各テーマページでは、収集した特許、技術要約、請求項ツリー、関連部位、適用候補を整理して表示します。</p>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h3 data-i18n="themeTitle">技術テーマ</h3>
+          <p data-i18n="themeLead">調査・可視化済みのテーマを選択してください。</p>
+        </div>
+      </div>
+
+      <div class="theme-grid">
+        <a class="theme-card" href="yamaha-1980s-patents.html">
+          <div class="theme-visual">
+            <img src="assets/processed/fzr1000_factory_manga.png" alt="">
+          </div>
+          <div class="theme-body">
+            <h4 data-i18n="yamahaTitle">1980年代 Yamaha オートバイ特許マップ</h4>
+            <p data-i18n="yamahaDesc">Google Patentsから収集したYamaha関連特許を、代表的な車両画像上の関連部位へマッピングした技術テーマです。</p>
+            <div class="theme-meta">
+              <span class="pill" data-i18n="tagPatent">特許</span>
+              <span class="pill" data-i18n="tagMotorcycle">オートバイ</span>
+              <span class="pill" data-i18n="tagClaims">請求項ツリー</span>
+            </div>
+          </div>
+        </a>
+
+        <article class="theme-card placeholder">
+          <div class="theme-visual">
+            <div class="placeholder-mark">+</div>
+          </div>
+          <div class="theme-body">
+            <h4 data-i18n="nextThemeTitle">次の技術テーマ</h4>
+            <p data-i18n="nextThemeDesc">新しい特許調査テーマを追加するための枠です。</p>
+            <div class="theme-meta">
+              <span class="pill" data-i18n="tagPlanning">準備中</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="theme-card placeholder">
+          <div class="theme-visual">
+            <div class="placeholder-mark">+</div>
+          </div>
+          <div class="theme-body">
+            <h4 data-i18n="archiveTitle">技術資料アーカイブ</h4>
+            <p data-i18n="archiveDesc">報告書、比較表、動画資料などをテーマ別に整理する予定です。</p>
+            <div class="theme-meta">
+              <span class="pill" data-i18n="tagPlanning">準備中</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer data-i18n="footerNote">表示される適用候補は、特許情報と技術領域にもとづく調査用の関連付けです。実製品への採用確定には、公式資料・部品表・サービスマニュアル等での確認が必要です。</footer>
+
+  <script>
+    const text = {
+      ja: {
+        siteName: "淡路島AI技術リサーチ",
+        eyebrow: "技術テーマライブラリ",
+        heroTitle: "AIで特許・技術情報を読み解き、テーマ別に可視化します。",
+        heroLead: "このトップページは技術テーマを選択する入口です。各テーマページでは、収集した特許、技術要約、請求項ツリー、関連部位、適用候補を整理して表示します。",
+        themeTitle: "技術テーマ",
+        themeLead: "調査・可視化済みのテーマを選択してください。",
+        yamahaTitle: "1980年代 Yamaha オートバイ特許マップ",
+        yamahaDesc: "Google Patentsから収集したYamaha関連特許を、代表的な車両画像上の関連部位へマッピングした技術テーマです。",
+        tagPatent: "特許",
+        tagMotorcycle: "オートバイ",
+        tagClaims: "請求項ツリー",
+        nextThemeTitle: "次の技術テーマ",
+        nextThemeDesc: "新しい特許調査テーマを追加するための枠です。",
+        archiveTitle: "技術資料アーカイブ",
+        archiveDesc: "報告書、比較表、動画資料などをテーマ別に整理する予定です。",
+        tagPlanning: "準備中",
+        footerNote: "表示される適用候補は、特許情報と技術領域にもとづく調査用の関連付けです。実製品への採用確定には、公式資料・部品表・サービスマニュアル等での確認が必要です。"
+      },
+      en: {
+        siteName: "Awaji Island AI Technology Research",
+        eyebrow: "Technology Theme Library",
+        heroTitle: "AI-assisted patent and technology research, organized by theme.",
+        heroLead: "This top page is the entrance for selecting technology themes. Each theme page organizes collected patents, technical summaries, claim trees, mapped locations, and candidate applications.",
+        themeTitle: "Technology Themes",
+        themeLead: "Select a researched and visualized theme.",
+        yamahaTitle: "1980s Yamaha Motorcycle Patent Map",
+        yamahaDesc: "A technology theme that maps Yamaha-related patents collected from Google Patents onto likely related areas of representative motorcycle images.",
+        tagPatent: "Patents",
+        tagMotorcycle: "Motorcycles",
+        tagClaims: "Claim Trees",
+        nextThemeTitle: "Next Technology Theme",
+        nextThemeDesc: "A slot for adding a new patent research theme.",
+        archiveTitle: "Technical Document Archive",
+        archiveDesc: "Reports, comparison tables, and video materials can be organized here by theme.",
+        tagPlanning: "Planned",
+        footerNote: "Candidate applications are research mappings based on patent information and technology area. Confirmed production adoption requires official materials, parts lists, service manuals, or equivalent sources."
+      }
+    };
+
+    let lang = "ja";
+    function applyLang() {
+      document.querySelectorAll("[data-i18n]").forEach(node => {
+        node.textContent = text[lang][node.dataset.i18n] || node.textContent;
+      });
+      document.title = text[lang].siteName;
+      document.documentElement.lang = lang;
+      document.getElementById("langJa").classList.toggle("active", lang === "ja");
+      document.getElementById("langEn").classList.toggle("active", lang === "en");
+    }
+
+    document.getElementById("langJa").addEventListener("click", () => {
+      lang = "ja";
+      applyLang();
+    });
+
+    document.getElementById("langEn").addEventListener("click", () => {
+      lang = "en";
+      applyLang();
+    });
+
+    applyLang();
+  </script>
+</body>
+</html>
