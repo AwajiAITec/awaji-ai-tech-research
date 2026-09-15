@@ -1,4 +1,4 @@
-# 淡路島AI技術リサーチ
+# 淡路AI技術リサーチ
 
 English name: Awaji Island AI Technology Research
 
